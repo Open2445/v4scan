@@ -307,6 +307,35 @@ A GitHub personal access token was previously exposed in this project's history/
   `cargo publish`, and cutting a GitHub Release.
 - No token has been written to any remote, file, log, commit, or this document.
 
+## Phase 1 verification — 2026-09-08 (local state only, zero authenticated network ops)
+
+No push/publish performed (PAT revocation unconfirmed — see BLOCKER above). All commands run locally:
+
+- `git status` → clean on `main` (no untracked / no modified)
+- `git log --oneline -5` → `ec0e9ac` → `e9bd162` → `a93aed1` → `b84413b` → `f1130b5`
+- `git remote -v` → `https://github.com/Open2445/v4scan.git` (no embedded token)
+- `cargo test --release` → **9 passed, 0 failed**
+- six-fixture sweep → `01:exit1/high1  02:exit1/high1  03:exit1/high1  04:exit1/high1  05:exit0/high0  06:exit0/high0`
+- SARIF → version `2.1.0`; `tool.driver.rules` populated with **4 rules**
+  (`V4-INSTALL-EXEC`/`V4-NET-EGRESS`/`V4-NO-PROVENANCE`/`V4-THIN-META`);
+  4 results at levels `error`/`warning`/`warning`/`note`;
+  every `ruleIndex` resolves to its `ruleId` (programmatic check = **True**)
+- `cargo package --allow-dirty` → **packaged 33 files, 74.8 KiB (24.5 KiB compressed)**; verify compile finished
+
+**Local quality gates: GREEN.** Public launch + install instrumentation remain **BLOCKED** on the PAT.
+
+## Status snapshot (2026-09-08)
+
+| Dimension | Marker | Why |
+|---|---|---|
+| Product quality (tests, fixtures, SARIF, packaging) | **PROVEN** | re-run this session, real output above |
+| Public launch surface (README/DEMO) | **PROVEN (prepared)** | written; not yet pushed to a public remote |
+| installs/week | **UNINSTRUMENTED** | no crates.io publish, no GitHub Release binaries |
+| stars / clones / stranger issues+PRs | **NOT MEASURED** | repo read-only to public at `a93aed1`; unverified whether the founder counts |
+| outreach touches / replies / meetings | **0 (NOT a signal)** | materials prepared; no send capability/authorization this session |
+| Condition #3 (novel malicious artifact) | **INCONCLUSIVE** | no obtainable genuine artifact unflagged by Socket/Snyk/GitHub |
+| PAT revocation | **UNCONFIRMED** | blocks all authenticated GitHub ops |
+
 Full adoption/discovery/Condition-#3 operating spec:
 `opc-doc/outputs/07-conversion/validation-ops.md`
 
