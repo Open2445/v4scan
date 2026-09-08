@@ -1,0 +1,9 @@
+- id: v4scan
+  name: v4-scan — install-time supply-chain firewall
+  description: >
+    Scans MCP servers / AI-agent skill packages for install-time supply-chain
+    risk: install scripts, network egress, typosquats, obfuscation, and missing
+    provenance. Fails the commit if any High/Critical finding is present.
+  entry: v4scan .
+  language: rust
+  pass_filenames: false

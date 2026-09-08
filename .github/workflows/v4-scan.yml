@@ -1,0 +1,44 @@
+name: v4-scan supply-chain firewall
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      scan-path:
+        description: "Path to scan (defaults to repo root)"
+        required: false
+        default: "."
+
+jobs:
+  v4-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build v4-scan
+        run: cargo build --release
+
+      - name: Run v4-scan (SARIF)
+        run: |
+          SCAN_PATH="${{ github.event.inputs.scan-path || '.' }}"
+          ./target/release/v4scan "$SCAN_PATH" --sarif > v4scan.sarif
+          echo "::group::v4scan report"
+          cat v4scan.sarif
+          echo "::endgroup::"
+
+      - name: Upload SARIF artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v4scan-sarif
+          path: v4scan.sarif
+
+      - name: Gate on High/Critical findings
+        run: |
+          SCAN_PATH="${{ github.event.inputs.scan-path || '.' }}"
+          ./target/release/v4scan "$SCAN_PATH"

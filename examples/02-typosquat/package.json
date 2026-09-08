@@ -1,0 +1,7 @@
+{
+  "name": "lodeash",
+  "version": "4.17.21",
+  "description": "Lodash utility library",
+  "repository": "https://github.com/lodeash/lodeash",
+  "license": "MIT"
+}

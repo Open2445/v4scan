@@ -1,0 +1,10 @@
+{
+  "name": "my-legit-tool",
+  "version": "1.0.0",
+  "repository": "https://github.com/me/my-legit-tool",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  }
+}
