@@ -269,7 +269,9 @@ known-malicious sample existed to test "missed-known-malicious" against (see lim
 
 Baseline state before outreach begins:
 
-- HEAD = `a93aed1`; working tree clean; git remote contains **no credential**.
+- HEAD = `e9bd162` (launch-prep commit); working tree clean; git remote contains **no credential**.
+- **Remote state (checked unauthenticated, no token used):** `origin` main = `a93aed1` — the repo
+  is publicly readable. `e9bd162` is **not pushed** (blocked on the exposed-PAT revocation, below).
 - `cargo test --release`: **9 / 9 regression tests pass**.
 - Fixture behaviour (real runs, current binary):
 
@@ -290,6 +292,20 @@ Baseline state before outreach begins:
 - **⚠️ `installs/week` is UNINSTRUMENTED:** no crates.io publication and no GitHub Release
   binaries exist, so no download counter exists. Do **not** record 0 as a demand signal.
   Fix: `cargo publish` + cut a Release with binaries, then start recording.
+
+### 🚧 Blocker: exposed GitHub PAT (unresolved)
+
+A GitHub personal access token was previously exposed in this project's history/session output.
+
+- **Revocation status: UNVERIFIED.** It cannot be confirmed without performing an authenticated
+  GitHub call — which is exactly what must not happen while the token may still be live.
+- **Therefore: zero authenticated git operations have been performed.** No push, no authenticated
+  fetch. The `ls-remote` check above was run with `GIT_TERMINAL_PROMPT=0` and used no credential.
+- `git remote -v` confirmed to contain **no embedded token** (plain `https://github.com/...`).
+- **Required founder action:** revoke + rotate the PAT at
+  <https://github.com/settings/tokens>, then confirm. Only after that: `git push origin main`,
+  `cargo publish`, and cutting a GitHub Release.
+- No token has been written to any remote, file, log, commit, or this document.
 
 Full adoption/discovery/Condition-#3 operating spec:
 `opc-doc/outputs/07-conversion/validation-ops.md`

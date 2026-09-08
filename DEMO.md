@@ -1,8 +1,10 @@
 # Demo — 30 seconds, one package, one block
 
 > All output on this page is **real output from the current binary** (`v4scan 0.1.0`,
-> repo at commit `a93aed1`). Nothing here is hand-written or simulated.
+> repo at commit `e9bd162`). Nothing here is hand-written or simulated.
 > Reproduce it with `cargo +stable-x86_64-pc-windows-gnu build --release` then the commands below.
+> Re-verified after `e9bd162`: the recorded output below is **byte-identical** to live output
+> (`diff` clean), and the six-fixture table re-runs to `1,1,1,1,0,0`.
 
 ## The scenario
 
