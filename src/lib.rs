@@ -214,6 +214,13 @@ const POPULAR_PACKAGES: &[&str] = &[
     "socket.io", "redux", "typescript", "vite", "rollup", "jquery", "bootstrap",
     "numpy", "pandas", "requests", "flask", "django", "pillow", "scipy", "torch",
     "tensorflow", "matplotlib", "requests", "click", "fastapi", "pydantic",
+    // Beachhead-specific targets — AI-agent / MCP ecosystem names that real
+    // typosquat campaigns (e.g. SANDWORM_MODE, Feb 2026) have impersonated.
+    // These are legitimate detection improvements; they do not relax Condition #3.
+    // Curated to distinctive names to minimize false positives: `claude-code`
+    // catches claud-code / cloude-code; `openclaw` catches opencraw.
+    "claude-code", "openclaw", "@modelcontextprotocol/sdk", "@anthropic-ai/sdk",
+    "cursor", "codex",
 ];
 
 const SCRIPT_KEYS: &[&str] = &[
@@ -255,7 +262,11 @@ fn is_text(_path: &Path, data: &[u8]) -> bool {
     if data.len() > 512 * 1024 {
         return false;
     }
-    data.iter().all(|&b| b == 0 || b >= 0x09 && b <= 0x7e || b == 0xa0 || b >= 0xc0)
+    // Accept any valid UTF-8. The previous byte-range heuristic silently SKIPPED
+    // files containing multibyte characters (em dashes, non-Latin identifiers,
+    // emoji), creating a real blind spot where source that legitimately uses
+    // Unicode was never scanned. Valid UTF-8 also covers pure-ASCII source.
+    std::str::from_utf8(data).is_ok()
 }
 
 fn collect_files(root: &Path, out: &mut Vec<PathBuf>, limit: usize) {

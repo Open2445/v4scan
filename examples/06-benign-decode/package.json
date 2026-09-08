@@ -1,0 +1,6 @@
+{
+  "name": "my-audio-decoder",
+  "version": "1.0.0",
+  "description": "Decodes base64 audio chunks for the agent pipeline",
+  "license": "MIT"
+}
