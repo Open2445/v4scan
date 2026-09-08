@@ -85,8 +85,55 @@ impl ScanReport {
         s
     }
 
-    /// Minimal SARIF 2.1.0 so the output is forwardable to GRC / security tooling.
+    /// SARIF 2.1.0 with rule metadata, so consumers (GitHub code scanning, GRC
+    /// tooling) can resolve each `ruleId` to a name, description and default level.
     pub fn to_sarif(&self) -> String {
+        // Unique rule ids in first-seen order, so results can reference them by
+        // index. Without a `rules` array, `ruleId` is unresolvable for consumers.
+        let mut rule_ids: Vec<&str> = Vec::new();
+        for f in &self.findings {
+            if !rule_ids.contains(&f.id.as_str()) {
+                rule_ids.push(f.id.as_str());
+            }
+        }
+
+        let mut rules = String::new();
+        for (i, id) in rule_ids.iter().enumerate() {
+            let f = self
+                .findings
+                .iter()
+                .find(|x| x.id.as_str() == *id)
+                .unwrap();
+            let default_level = match f.severity {
+                Severity::Critical | Severity::High => "error",
+                Severity::Medium => "warning",
+                Severity::Low => "note",
+            };
+            if i > 0 {
+                rules.push_str(",\n");
+            }
+            rules.push_str("        {\n");
+            rules.push_str(&format!("          \"id\": {},\n", json_str(id)));
+            rules.push_str(&format!("          \"name\": {},\n", json_str(&f.category)));
+            rules.push_str(&format!(
+                "          \"shortDescription\": {{ \"text\": {} }},\n",
+                json_str(&f.signal)
+            ));
+            rules.push_str(&format!(
+                "          \"fullDescription\": {{ \"text\": {} }},\n",
+                json_str(&f.description)
+            ));
+            rules.push_str(&format!(
+                "          \"defaultConfiguration\": {{ \"level\": {} }},\n",
+                json_str(default_level)
+            ));
+            rules.push_str(&format!(
+                "          \"help\": {{ \"text\": {} }}\n",
+                json_str(&f.description)
+            ));
+            rules.push_str("        }");
+        }
+
         let mut results = String::new();
         for (i, f) in self.findings.iter().enumerate() {
             if i > 0 {
@@ -97,8 +144,10 @@ impl ScanReport {
                 Severity::Medium => "warning",
                 Severity::Low => "note",
             };
+            let rule_index = rule_ids.iter().position(|r| *r == f.id.as_str()).unwrap();
             results.push_str("    {\n");
             results.push_str(&format!("      \"ruleId\": {},\n", json_str(&f.id)));
+            results.push_str(&format!("      \"ruleIndex\": {},\n", rule_index));
             results.push_str(&format!("      \"level\": {},\n", json_str(level)));
             results.push_str("      \"message\": { \"text\": ");
             results.push_str(&json_str(&format!("{} — {}", f.signal, f.description)));
@@ -108,8 +157,8 @@ impl ScanReport {
             results.push_str("    }");
         }
         format!(
-            "{{\n  \"version\": \"2.1.0\",\n  \"$schema\": \"https://json.schemastore.org/sarif-2.1.0.json\",\n  \"runs\": [\n    {{\n      \"tool\": {{ \"driver\": {{ \"name\": \"v4scan\", \"version\": \"0.1.0\" }} }},\n      \"results\": [\n{}      ]\n    }}\n  ]\n}}",
-            results
+            "{{\n  \"version\": \"2.1.0\",\n  \"$schema\": \"https://json.schemastore.org/sarif-2.1.0.json\",\n  \"runs\": [\n    {{\n      \"tool\": {{ \"driver\": {{ \"name\": \"v4scan\", \"version\": \"0.1.0\", \"rules\": [\n{}\n      ] }} }},\n      \"results\": [\n{}\n      ]\n    }}\n  ]\n}}",
+            rules, results
         )
     }
 }

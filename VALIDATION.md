@@ -26,6 +26,10 @@
 
 ## Day-30 gate (hard stop, 2026-10-08)
 
+> The gate is a **DATE**, not a week boundary. 2026-10-08 falls inside the **W5** row
+> (10-06 → 10-12) of the weekly table; the W4 "(gate)" label is a planning convenience only.
+> Judge on **cumulative totals as of 2026-10-08**, whichever week row the calendar lands in.
+
 > **PASS** if: ≥100 touches **and** ≥4 replies **and** ≥1 meeting.
 > **FAIL** if: ≤1 reply → fix message/list, do not conclude.
 > **INCONCLUSIVE** if: <100 touches → forbidden to call it a result.
@@ -258,6 +262,37 @@ known-malicious sample existed to test "missed-known-malicious" against (see lim
 |------|---------|------------------|-------------------------------|--------|-------|
 | 2026-09-08 | (170-pkg mainstream corpus) | 15× `V4-OBF-EVAL` (HIGH, old binary) | — | No | All false positives; tuning fixed → 0 HIGH |
 | 2026-09-08 | `claud-code@0.0.1-security` | `V4-TYPOSQUAT` (HIGH) | Flagged — SANDWORM_MODE, Socket Feb 2026 | **No** | Real typosquat, but already known; placeholder on npm |
+
+---
+
+## Repo audit (2026-09-08) — verified by execution, not inspection
+
+Baseline state before outreach begins:
+
+- HEAD = `a93aed1`; working tree clean; git remote contains **no credential**.
+- `cargo test --release`: **9 / 9 regression tests pass**.
+- Fixture behaviour (real runs, current binary):
+
+  | Fixture | Exit | Highest | Notes |
+  |---|---|---|---|
+  | 01 postinstall `curl \| sh` | **1** | HIGH `V4-INSTALL-EXEC` | blocks as intended |
+  | 02 typosquat (`lodeash`) | **1** | HIGH `V4-TYPOSQUAT` | edit distance 1 |
+  | 03 obfuscated eval | **1** | HIGH `V4-OBF-EVAL` | decode-**then**-execute |
+  | 04 install network exfil | **1** | HIGH `V4-INSTALL-EXEC` | `preinstall` egress |
+  | 05 benign-but-thin | **0** | MEDIUM `V4-NO-PROVENANCE` | **no HIGH** — precision holds |
+  | 06 benign-decode | **0** | LOW `V4-OBF-DECODE` | **no HIGH** — benign `atob` |
+
+- **Precision confirmed:** clean packages produce no HIGH; dangerous patterns still do.
+- **SARIF:** valid 2.1.0, 4 results, levels `error`/`warning`/`note`, exit 1.
+  `tool.driver.rules` is populated (4 rules: name, full description, default level) and every
+  result carries a `ruleIndex` that resolves to the correct rule — verified programmatically.
+- GitHub Action and pre-commit hook present and coherent.
+- **⚠️ `installs/week` is UNINSTRUMENTED:** no crates.io publication and no GitHub Release
+  binaries exist, so no download counter exists. Do **not** record 0 as a demand signal.
+  Fix: `cargo publish` + cut a Release with binaries, then start recording.
+
+Full adoption/discovery/Condition-#3 operating spec:
+`opc-doc/outputs/07-conversion/validation-ops.md`
 
 ---
 

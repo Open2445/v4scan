@@ -3,7 +3,12 @@ name = "v4-scan"
 version = "0.1.0"
 edition = "2021"
 description = "Install-time supply-chain firewall for MCP servers and AI-agent skill packages — deterministic detection, no model in the loop."
-license = "MIT OR Apache-2.0"
+license = "MIT"
+repository = "https://github.com/Open2445/v4scan"
+readme = "README.md"
+keywords = ["security", "supply-chain", "mcp", "ai-agents", "scanner"]
+categories = ["command-line-utilities", "development-tools"]
+exclude = ["_cond3/**"]
 
 [[bin]]
 name = "v4scan"
