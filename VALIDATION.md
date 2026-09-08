@@ -18,7 +18,7 @@
 |---|-----------|--------|----------|
 | 1 | ≥500 GitHub stars **and** ≥50 verified installs/week | ⬜ | |
 | 2 | ≥5 unrelated developers make inbound contact | ⬜ | |
-| 3 | ≥1 genuinely malicious artifact found that **Socket / Snyk / GitHub had NOT flagged** within 60 days | 🔍 IN PROGRESS | see "Novel-detection log" below |
+| 3 | ≥1 genuinely malicious artifact found that **Socket / Snyk / GitHub had NOT flagged** within 60 days | 🔍 IN PROGRESS — 170/185 scanned; **0 novel found**; signal tuned | see "Condition #3 — interim finding" below |
 | 4 | ≥3 of 20 cold contacts convert on HN / r-rust / r-Python / MCP Discords | ⬜ | |
 | 5 | *(withdrawn — replaced by "≥1 paid pilot OR ≥2 signed LOIs within 8 weeks")* | ⬜ | |
 
@@ -62,7 +62,69 @@ advisory / npm audit**.
 
 | Date | Package | v4scan signal(s) | Verdict by Socket/Snyk/GitHub | Novel? | Notes |
 |------|---------|------------------|-------------------------------|--------|-------|
-| | | | | | |
+| 2026-09-08 | (170-pkg corpus) | 15× `V4-OBF-EVAL` (HIGH) | — | **No** | All 15 verified false positives — see finding below |
+
+---
+
+## Condition #3 — interim finding (2026-09-08)
+
+**Scope.** 170 of 185 packages scanned (mainstream MCP servers + AI-agent skill
+packages; the 85 agent-skill packages are the beachhead Socket itself says it is
+only now covering). Scan run with the *original* binary; results in `results.tsv`.
+
+**Result.** 0 Critical. 15 HIGH — **every one a false positive**, confirmed by
+reading the extracted source of each flagged package.
+
+**Root cause.** `V4-OBF-EVAL` fired HIGH on benign decode primitives:
+`atob(`, `buffer.from(`, `base64.b64decode`, `new function(`. These are
+ubiquitous in legitimate code (base64 audio decode, OAuth-token decode, Node
+`Buffer` construction, vendored Chrome-DevTools code). **0 of 170 packages
+contain a genuine decode-THEN-execute pattern** (`eval(atob`, `eval(base64`,
+`new Function(atob`, `new Function(base64`).
+
+Verified false positives (benign primitive → why it's safe):
+
+| Package | Primitive | Legitimate use |
+|---|---|---|
+| chrome-devtools-mcp | `atob`/`buffer.from` | vendored Chrome DevTools `build/third_party` |
+| ai (Vercel) | `atob` | base64 **audio** decode (`realtime/audio-utils.ts`) |
+| @zoom/slack-to-zoom | `buffer.from` | OAuth token decode (`tokens.ts`) |
+| @ai-sdk/gateway | `atob` | WebRTC base64 in `gateway-realtime-auth.ts` |
+| @rpamis/comet | 31×`atob` + 62×`buffer.from` | 64 agent-skill scripts passing binary data |
+| skillguard-cli | `buffer.from` | a **test fixture** `examples/known-bad-skill/hooks/obfuscated.js` |
+| inject-nockta-skills | 26×`buffer.from` | Shopify skill validators |
+| + 8 others | same benign primitives | — |
+
+**Tuning fix (committed in `src/lib.rs`).** Split the signal:
+- `V4-OBF-EVAL` → **HIGH only** for genuine decode-then-execute
+  (`eval(atob`, `eval(base64`, `new function(atob`, `new function(base64)`).
+- New `V4-OBF-DECODE` → **LOW** (informational, first-party only) for the benign
+  primitives; no longer gates CI.
+- `V4-OBF-ENTROPY` / `V4-OBF-B64` → skip vendored/minified paths
+  (`node_modules`, `third_party`, `vendor`, `*.min.js`, `*.bundle.js`, `*.map`).
+- README signal table updated to match.
+
+**Re-verified.** Over the same 170 extracted packages with the tuned binary:
+**0 HIGH, 0 Critical**. The malicious fixture `examples/03-obfuscated-eval`
+(`eval(atob(payload))`) **still fires HIGH `V4-OBF-EVAL`** — true-positive
+detection preserved. Before/after: **15 HIGH (100% FP) → 0 HIGH**.
+
+**Honest verdict.** Condition #3 is **NOT yet satisfied.** No genuinely malicious
+artifact was found. Two caveats must be stated plainly:
+1. The tested corpus is overwhelmingly *mainstream / well-known* packages — exactly
+   what Socket / Snyk / GitHub **already** scan. So this run measures
+   **false-positive rate**, not true-positive rate. It cannot surface a "novel"
+   catch because there is (almost) nothing malicious in it to find.
+2. A clean true-positive test requires a **hostile corpus**: historical npm-malware
+   samples, typosquats, and low-reputation / freshly-published packages. The
+   `examples/` fixtures already prove the engine *can* catch decode-execute
+   behavior; the open question is whether it catches real malware the majors
+   missed.
+
+**Required next step (owner: founder / lead).** Build and scan a hostile corpus,
+then cross-check any HIGH/CRITICAL against `npm audit`, GitHub Security
+Advisories, and Socket/Snyk to apply the "not already flagged" clause. Until
+then, condition #3 remains **INCONCLUSIVE**, not failed.
 
 ---
 

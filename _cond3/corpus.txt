@@ -1,0 +1,185 @@
+@notionhq/notion-mcp-server|2.5.1|Official MCP server for Notion API
+@ui5/mcp-server|0.2.18|MCP server for SAPUI5/OpenUI5 development
+@apify/actors-mcp-server|0.15.4|Apify MCP Server
+@transcend-io/mcp-server-admin|0.6.10|Transcend MCP Server — Admin tools.
+@sentry/mcp-server|0.39.0|Sentry MCP Server
+@upstash/context7-mcp|4.0.5|MCP server for Context7
+@sap-ux/fiori-mcp-server|1.12.3|SAP Fiori - Model Context Protocol (MCP) server
+chrome-devtools-mcp|1.8.0|MCP server for Chrome DevTools
+@modelcontextprotocol/server-filesystem|2026.8.31|MCP server for filesystem access
+@browserstack/mcp-server|1.3.1|BrowserStack's Official MCP Server
+@transcend-io/mcp-server-assessment|0.5.30|Transcend MCP Server — Assessments tools.
+@transcend-io/mcp-server-workflows|0.5.30|Transcend MCP Server — Workflows tools.
+@transcend-io/mcp-server-consent|0.9.6|Transcend MCP Server — Consent Management tools.
+@transcend-io/mcp-server-discovery|0.5.30|Transcend MCP Server — Data Discovery tools.
+@transcend-io/mcp-server-inventory|0.7.10|Transcend MCP Server — Data Inventory tools.
+@transcend-io/mcp-server-dsr|0.8.10|Transcend MCP Server — DSR Automation tools.
+@heroku/mcp-server|1.2.7|Heroku Platform MCP Server
+kubernetes-mcp-server|0.0.66|Model Context Protocol (MCP) server for Kubernetes and OpenShift
+@winor30/mcp-server-datadog|1.8.0|MCP server for interacting with Datadog API
+@hubspot/mcp-server|0.4.0|MCP Server for developers building HubSpot Apps
+@transcend-io/mcp-server-preferences|0.7.2|Transcend MCP Server — Preference Management tools.
+@ericthered926/duckduckgo-mcp-server|0.6.0|A Model Context Protocol (MCP) server for DuckDuckGo web and news search
+hostinger-api-mcp|1.57.2|MCP server for Hostinger API
+@transcend-io/mcp-server-base|1.8.1|Shared infrastructure for Transcend MCP Server packages.
+@cloudflare/mcp-server-cloudflare|0.2.0|MCP server for interacting with Cloudflare API
+@modelcontextprotocol/sdk|1.30.0|Model Context Protocol implementation for TypeScript
+@modelcontextprotocol/server|2.0.0|Model Context Protocol implementation for TypeScript - Server package
+@modelcontextprotocol/client|2.0.0|Model Context Protocol implementation for TypeScript - Client package
+@modelcontextprotocol/inspector|2.5.0|The Model Context Protocol Inspector
+@modelcontextprotocol/core|2.0.0|Model Context Protocol for TypeScript — public Zod schemas (spec + OAuth/OpenID)
+mcp-handler|2.1.1|Framework-agnostic HTTP adapter for Model Context Protocol servers
+@langchain/mcp-adapters|1.1.4|LangChain.js adapters for Model Context Protocol (MCP)
+@traceloop/instrumentation-mcp|0.27.0|MCP (Model Context Protocol) Instrumentation
+@payloadcms/plugin-mcp|3.88.0|MCP (Model Context Protocol) capabilities with Payload
+@modelcontextprotocol/node|2.0.0|Model Context Protocol implementation for TypeScript - Node.js middleware
+nx-mcp|0.25.0|A Model Context Protocol server implementation for Nx
+mongodb-mcp-server|2.1.1|MongoDB Model Context Protocol Server
+@rekog/mcp-nest|2.0.3|NestJS module for creating Model Context Protocol (MCP) servers
+mcporter|0.13.10|TypeScript runtime and CLI for connecting to configured Model Context Protocol s
+@remotion/mcp|4.0.522|Remotion's Model Context Protocol
+n8n-mcp|2.82.1|Integration between n8n workflow automation and Model Context Protocol (MCP)
+@redocly/mcp-typescript-sdk|1.18.1|Model Context Protocol implementation for TypeScript
+agnost|0.2.1|Analytics SDK for Model Context Protocol Servers
+@better-auth/mcp|1.7.3|Model Context Protocol (MCP) plugin for Better Auth
+@wong2/mcp-cli|2.0.0|A CLI inspector for the Model Context Protocol
+pi-mcp-adapter|2.32.1|MCP (Model Context Protocol) adapter extension for Pi coding agent
+@paperclipai/mcp-server|2026.831.1|Model Context Protocol server for Paperclip.
+@mcp-use/modelcontextprotocol-sdk|1.24.3-mcp-use.4|Model Context Protocol implementation for TypeScript
+@executeautomation/playwright-mcp-server|1.0.12|Model Context Protocol servers for Playwright
+antd-claude-skill|0.1.8|An Ant Design Claude skill package
+bible-ko-mcp|0.3.0|MCP server (and Claude Skill) for the Korean Bible (bskorea.or.kr)
+@neat.is/claude-skill|0.9.14|Claude Code skill drop-in for NEAT — wires the @neat.is/mcp server into Claude's
+dropsh|0.6.1|Entity-agnostic helper CLI for Drupal 11 JSON:API, used by the dropsh Claude ski
+@lahat-group/cli|2.0.0|CLI + Claude Skill to build, validate, price, and save wardrobe designs.
+claude-skill-search|0.2.0|Claude skill search server via MCP
+ui-ux-consultant-cli|1.1.2|CLI installer for the UI/UX Consultant Claude skill
+skills|1.5.24|The open agent skills ecosystem
+@v1design/cli|0.3.14|v-1.design CLI, local agent connector, and bundled Codex/Claude skill.
+claude-skill-guard|1.1.5|A security scanner for Claude Skills
+ai|7.0.93|AI SDK by Vercel - build apps like ChatGPT, Claude, Gemini, and more with a sing
+skilltune|0.0.9|Optimize Claude skill descriptions for reliable triggering
+@canton-network-devs/cf-daml-skill|1.0.1|Claude skill for writing correct Daml smart contracts on Canton Network
+@titan-design/active-work|0.2.0|Durable workspace state for engineering work — CLI, MCP, and Claude skill for tr
+yhh-mcp-server|2.0.0|御华浩 B2B 机票 — Cursor/Claude Skill + yhh-cli + MCP stdio（OpenClaw）
+@zoom/slack-to-zoom|0.1.4|Installable Codex and Claude skill wrappers for Slack-to-Zoom migration workflow
+@tleblancureta/prez|0.4.2|Framework-agnostic React presentation system. Author slide decks as TSX, render
+skilldex-cli|1.2.0|Package manager and registry for Claude skill packages
+@satoshibits/claude-skill-runtime|1.1.0|Runtime library for Claude Code auto-loading skills - shared matching algorithms
+@anyformat/skill|0.2.5|Install the anyformat Claude skill: build and run document-extraction workflows
+@swarmvault/claude-skill|1.0.1|Claude skill for Swarm Vault manager trading - execute swaps and transactions th
+toolsview|1.9.0|Analyze Claude skill relationships and emit a graph JSON + HTML viewer
+claude-skill-lint|0.6.0|A CLI tool that validates Claude Code skill files for structural correctness
+@ai-sdk/anthropic|4.0.49|The **[Anthropic provider](https://ai-sdk.dev/providers/ai-sdk-providers/anthrop
+claude-skill-ai-video-remix|1.0.3|Claude skill: AI video remix generator using ShotAI MCP + Remotion rendering
+@nitra/cnpg-backup|1.0.0|CNPG Barman backup monitoring: Cursor skill /n-cnpg-backup-pr, CronJob run-once,
+@waffo/waffo-integrate|1.7.0|Claude Code / Cursor skill for integrating Waffo Payment SDK (Node.js / Java / G
+@deepsoul/agentic-planning-mcp|1.3.0|MCP-Server und Cursor-Skill-Setup für agent-ready Ticket-Kontext aus GitHub Issu
+resuggestor|1.0.4|Cursor skill for frontend performance optimization — install with npm and use /r
+aisearchindex-cursor-skill|1.0.0|Cursor skill for AI Search Index - AI bot tracking analytics
+@huntermcgrew/prism|0.10.0|PRISM — multi-team distributable AI toolkit (Claude / Codex / Cursor skill perso
+coderefiner|1.0.7|Cursor skill for frontend performance optimization — install with npm and use /c
+restore-cursor|5.1.0|Gracefully restore the CLI cursor on exit
+@ai-sdk/gateway|4.0.75|The Gateway provider for the [AI SDK](https://ai-sdk.dev/docs) allows the use of
+cli-cursor|5.0.0|Toggle the CLI cursor
+@audiodn/agent-kit|0.1.1|Install AudioDN coding-agent guidance (AGENTS.md, CLAUDE.md, Copilot, Cursor, Sk
+pi-meter|0.1.1|LLM spend tracking, budget alerts, auto-downshift, and hard cutoff for AI coding
+pi-secrets-guard|0.1.1|Block secrets and PII before they land: regex + entropy scanning for files, diff
+@ai-sdk/openai|4.0.60|The **[OpenAI provider](https://ai-sdk.dev/providers/ai-sdk-providers/openai)**
+@ai-sdk/google|4.0.64|The **[Google provider](https://ai-sdk.dev/providers/ai-sdk-providers/google)**
+@ai-sdk/openai-compatible|3.0.44|This package provides a foundation for implementing providers that expose an Ope
+pi-green-loop|0.2.0|Keep the build green: a polyglot, affected-test-scoped feedback loop for AI codi
+@ai-sdk/mcp|2.0.45|The **Model Context Protocol (MCP) client** for the [AI SDK](https://ai-sdk.dev/
+coderefine|1.0.5|Cursor skill for frontend performance optimization — install with npm and use /c
+@waffo/waffo-stripe-migrate|1.0.0|Claude Code / Codex / Cursor skill for migrating Stripe-Java merchants to the Wa
+@ai-sdk/xai|4.0.54|The **[xAI Grok provider](https://ai-sdk.dev/providers/ai-sdk-providers/xai)** f
+@ai-sdk/azure|4.0.63|The **[Azure provider](https://ai-sdk.dev/providers/ai-sdk-providers/azure)** fo
+@deepseek-ai/dsh-skill|0.0.1-rc.1|Agent skill provider registry for the DeepSeek Harness
+skill-check|1.2.0|Linter for agent skill files
+@sogni-ai/sogni-creative-agent-skill|3.39.0|Sogni Creative Agent Skill: agent skill and CLI for Sogni AI image, video, and m
+skilltrace|0.3.3|Local observability for AI agent skill usage
+nsauditor-ai-agent-skill|0.2.50|AI Agent Skill for NSAuditor AI — gives any AI coding agent built-in knowledge o
+@monotykamary/dsh-skill|0.1.9|Agent skill provider registry for the DeepSeek Harness
+@unieai/uad-skill|0.1.21|Agent skill provider registry for the DeepSeek Harness
+@theholocron/skills|1.3.3|Shared agent skill registry.
+skillreg|1.10.2|Local AI agent skill manager CLI
+skhub|0.13.1|CLI for installing AI agent skills from Agent Skill Hub
+@alistigo/artifact-list-skill|0.2.2|Alistigo artifact-list agent skill (agentskills.io)
+mcp-excalidraw-server|2.0.0|Excalidraw toolkit for AI coding agents — agent skill, CLI, and MCP server with
+@alistigo/artifact-manager-skill|0.2.2|Alistigo artifact-manager agent skill (agentskills.io)
+skillcap-lock|0.3.0|Review what an Agent Skill can newly do, not just what bytes changed.
+@mit-sdg/sync-engine-skill|0.0.0|Agent Skill for independently designed and reviewed sync-engine applications
+@follenfang/fupload|0.0.18|Install and run the Fuploader Agent Skill and Python CLI.
+skill-port-cli|0.9.4|Local Agent Skill hub and project binding CLI
+@quotient-forecasting/cassie-skill|0.4.12|Agent Skill operator manual and policy files for Cassie
+immune-brain|3.6.5|Immune-Brain agent skill system
+@huiliyi37/dsh-skill|0.8.0|Agent skill provider registry for the Tianshu Harness
+@rpamis/comet|0.4.0-rc.6|Agent Skill Harness For Turning Ideas Into Evaluated Workflows
+@carlosgtrz/tpsreader-agent-skill|1.0.4|Multi-agent skill for safely reading Clarion TopSpeed TPS files with TpsReader.
+@xynogen/pix-skills|0.8.4|Pi extension — agent skill loader (skill tool + skills bundle)
+@bitget-ai/getagent-skill|0.6.4|Install the official GetAgent Agent Skill for Playbook authoring.
+@kensio/skill-template|1.18.1|A copy-and-edit starting point for a new agent skill.
+guardskills|1.6.0|Security gate for AI agent skill installers
+openrp-toolkit|1.2.1|Model Context Protocol (MCP) Server and AI Agent Skill Suite for OpenRP.ai
+modular-codebase-rules-skill|0.1.3|AI-agent skill for modular codebase rules with framework detection.
+@imsovikde/skills|0.10.0|Souvik Dey's marketplace-ready AI agent skill directory.
+@canaryai/cli|0.38.0|Run tests, query issues, and manage AI agent skill templates from the command li
+@slide-agent/core|0.15.0|Portable AI-agent skill and TypeScript toolkit for creating, editing, rendering,
+@mahmudulrubel/custom-epub-creator-skill|1.0.1|Installer for custom-epub-creator AI Agent Skill
+@parkerlabs/dent|0.1.7|Dent CLI and AI-agent skill installer for schema-driven Dent API operations.
+@runcofactor/cli|0.38.0|Run tests, query issues, and manage AI agent skill templates from the command li
+@putervision/spc|1.5.0|High-performance zero-dependency static analysis tool enforcing NASA Power of Te
+skillguard-cli|0.2.4|Security scanner for third-party AI agent-skill files: SKILL.md manifests, hooks
+@skillguard/cli|3.1.22|Security scanner for AI agent skill files
+inject-nockta-skills|0.2.0|Injects Nockta AI agent skill packs (Claude, Cursor, Copilot adapters) into exis
+create-skill-pkg|0.0.4|CLI to scaffold AI Agent Skill projects in JS, TS or Python
+@clawtrail/init|2.14.0|CLI installer for ClawTrail AI agent skill files
+@skillit/cli|1.1.2|Extract CLI command structure from commander/yargs for AI agent skill generation
+zsxq-cli|0.5.1|知识星球官方命令行工具:OAuth 登录、发帖、评论、回答提问、记笔记,支持 AI Agent (Skill) 集成
+8004skill|2.3.0|AI agent skill for ERC-8004 agent economy interactions
+development-instructions-agent-skill|0.0.3|AI Agent skill with prompting set for development process
+@skillit/docusaurus|1.0.3|Extract Docusaurus documentation structure for AI agent skill generation
+vanilla-core-ui|1.3.9|AI Agent Skill & CLI for Vanilla-Core Architecture - SSoT state management, Pub/
+skillhub-cli|0.1.1|CLI for SkillHub - AI Agent Skill package manager
+@deepseek-ai/dsh-mcp-client|0.0.1-rc.1|MCP client bridge: connects to MCP servers and registers their tools on ctx.tool
+mcp-client|1.13.1|An MCP client for Node.js
+@dxos/mcp-client|0.11.1|MCP client.
+@lushly-dev/afd-client|1.0.0|MCP client library for Agent-First Development
+@gleanwork/mcp-config-schema|5.4.1|Type-safe schemas and builders for MCP client configurations
+@eggjs/mcp-client|3.87.0|tegg mcp client
+@eggjs/tegg-mcp-client|3.87.0|mcp client for egg
+@agent-infra/mcp-client|1.2.29|An MCP Client to run servers for Electron apps, support same-process approaching
+@memberjunction/ai-mcp-client|5.51.2|MemberJunction: Model Context Protocol (MCP) - Client Implementation for consumi
+@monotykamary/dsh-mcp-client|0.1.9|MCP client bridge: connects to MCP servers and registers their tools on ctx.tool
+@mokei/context-client|0.13.1|Mokei MCP client
+@yolk-sdk/mcp|0.0.1-canary.0|MCP client, server, and protocol utilities for Yolk agent runtimes.
+@unieai/uad-mcp-client|0.1.21|MCP client bridge: connects to MCP servers and registers their tools on ctx.tool
+@crazx/dsh-mcp-client|0.1.2-rc.1.zw.2|MCP client bridge: connects to MCP servers and registers their tools on ctx.tool
+n8n-nodes-mcp-client|0.2.12|4Runr's custom MCP Client node for n8n — connects to a self-hosted MCP server vi
+@agent-inspect/mcp|6.19.0|Local MCP client tool-call tracing for AgentInspect
+mockfly-mcp-client|1.1.0|Mockfly MCP Client
+opencode-mcp|1.11.0|MCP server that wraps the OpenCode AI headless server API — 80 tools, 10 resourc
+@mcp-s/mcp|1.1.0|Willow STDIO library — a local MCP server bridging your MCP client to your Willo
+@huiliyi37/dsh-mcp-client|0.8.0|MCP client bridge: connects to MCP servers and registers their tools on ctx.tool
+@nqminds/mcp-client|1.0.7|Reusable MCP client component with AI chat interface
+@balchemyai/agent-sdk|0.3.11|Balchemy external AI agent onboarding and MCP client SDK
+@funfe-dev/swagger-mcp-client|1.0.9|Swagger MCP Client for Cursor Integration
+@nest-mcp/client|0.3.2|NestJS MCP Client - Connect to and consume MCP servers from NestJS
+figma-mcp|0.1.4|ModelContextProtocol server for Figma
+@reventlessdev/rescript-mcp-sdk|1.0.0-alpha.21|ReScript bindings for @modelcontextprotocol/sdk
+ref-tools-mcp|3.0.3|ModelContextProtocol server for Ref
+@modelcontextprotocol/ext-apps|1.7.5|MCP Apps SDK — Enable MCP servers to display interactive user interfaces in conv
+puppeteer-mcp-server|0.7.2|Experimental MCP server for browser automation using Puppeteer (inspired by @mod
+@modelcontextprotocol/express|2.0.0|Express adapters for the Model Context Protocol TypeScript server SDK - Express
+@hisma/server-puppeteer|0.6.5|Fork and update (v0.6.5) of the original @modelcontextprotocol/server-puppeteer
+@atomicmail/mcp-modelcontextprotocol|0.3.26|Atomic Mail MCP server — local stdio proxy with PoW auth and JMAP, for AI agents
+@maz-ui/mcp|4.9.3|Maz-UI ModelContextProtocol Client
+@modelcontextprotocol/conformance|0.1.16|A framework for testing MCP (Model Context Protocol) client and server implement
+@modelcontextprotocol/server-everything|2026.8.31|MCP server that exercises all the features of the MCP protocol
+@maxhealth.tech/mcp-http|0.5.0|OAuth, CORS and observability layer for MCP HTTP servers on edge runtimes, built
+@arc-mcp/xsuaa-auth|1.0.2|XSUAA / OAuth authentication + BTP principal propagation for Model Context Proto
+mcp-starter|0.1.0|ModelContextProtocol starter server
+ifconfig-mcp|0.1.0|ModelContextProtocol starter server
+@atomicmail/agent-skill-modelcontextprotocol|0.3.26|Atomic Mail AgentSkill — register, jmap_request, and help CLI for AI agents. (mo
+@modelcontextprotocol/hono|2.0.0|Hono adapters for the Model Context Protocol TypeScript server SDK - Hono middle
+@modelcontextprotocol/fastify|2.0.0|Fastify adapters for the Model Context Protocol TypeScript server SDK - Fastify

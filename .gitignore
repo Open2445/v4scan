@@ -1,2 +1,8 @@
 /target
 _gen/
+# condition-#3 scan working dir: keep corpus + scripts, ignore extracted packages & outputs
+/_cond3/work/
+/_cond3/results.tsv
+/_cond3/verify_*.txt
+/_cond3/verify_tuned.tsv
+/_cond3/verify_tuned.sh

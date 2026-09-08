@@ -447,8 +447,19 @@ fn detect_obfuscation(text: &str, path: &Path, findings: &mut Vec<Finding>) {
         .and_then(|s| s.to_str())
         .map(|n| n == "package.json" || n == "pyproject.toml" || n == "setup.py" || n == "setup.cfg")
         .unwrap_or(false);
-    // high-entropy runs
-    if !is_manifest {
+    let fname = path.file_name().and_then(|s| s.to_str()).unwrap_or("");
+    let path_str = path.to_string_lossy();
+    // Vendored / minified third-party code is noisy for entropy & base64 heuristics
+    // (bundlers emit long high-entropy runs). Decode-then-execute (HIGH) is still
+    // checked everywhere, because malicious logic can hide in vendored paths too.
+    let is_vendored = path_str.contains("node_modules")
+        || path_str.contains("third_party")
+        || path_str.contains("/vendor/")
+        || fname.ends_with(".min.js")
+        || fname.ends_with(".bundle.js")
+        || fname.ends_with(".map");
+    // high-entropy runs — skip manifests and vendored/minified third-party code
+    if !is_manifest && !is_vendored {
         let bytes = text.as_bytes();
         if bytes.len() >= 25 {
             let e = shannon_entropy(bytes);
@@ -465,8 +476,8 @@ fn detect_obfuscation(text: &str, path: &Path, findings: &mut Vec<Finding>) {
         }
     }
     let low = text.to_lowercase();
-    // base64-like long runs
-    if !is_manifest {
+    // base64-like long runs — skip manifests and vendored/minified third-party code
+    if !is_manifest && !is_vendored {
         let mut run = 0;
         for c in low.chars() {
             if c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '=' {
@@ -487,18 +498,40 @@ fn detect_obfuscation(text: &str, path: &Path, findings: &mut Vec<Finding>) {
             }
         }
     }
-    // decode-eval patterns
-    for pat in ["eval(atob", "eval(base64", "atob(", "base64.b64decode", "buffer.from(", "new function("] {
+    // Tier 1: decode-then-execute (genuinely dangerous) -> HIGH.
+    // Only flag when code decodes data AND then executes it.
+    let decode_exec = ["eval(atob", "eval(base64", "new function(atob", "new function(base64"];
+    let mut dangerous = false;
+    for pat in decode_exec {
         if low.contains(pat) {
             findings.push(Finding {
                 id: "V4-OBF-EVAL".to_string(),
                 severity: Severity::High,
                 category: "obfuscation".to_string(),
                 signal: format!("decode-and-execute pattern '{pat}'"),
-                description: "Pattern decodes then executes — hallmark of obfuscated malicious logic.".to_string(),
+                description: "Code decodes data then executes it (eval / new Function on decoded content) — hallmark of obfuscated malicious logic.".to_string(),
                 evidence: format!("found '{pat}' in {}", path.display()),
             });
+            dangerous = true;
             break;
+        }
+    }
+    // Tier 2: benign decode primitives (ubiquitous in legitimate code) -> LOW,
+    // first-party only. Informational; does NOT gate CI.
+    if !dangerous && !is_vendored {
+        let benign = ["atob(", "base64.b64decode", "buffer.from(", "new function("];
+        for pat in benign {
+            if low.contains(pat) {
+                findings.push(Finding {
+                    id: "V4-OBF-DECODE".to_string(),
+                    severity: Severity::Low,
+                    category: "obfuscation".to_string(),
+                    signal: format!("base64/decode primitive '{pat}'"),
+                    description: "Base64 decode or dynamic-construct primitive. Ubiquitous in legitimate code; informational only — not gating.".to_string(),
+                    evidence: format!("found '{pat}' in {}", path.display()),
+                });
+                break;
+            }
         }
     }
 }

@@ -20,10 +20,11 @@ v4scan . --sarif        # exit code 1 => block the merge
 |--------|----------|---------|
 | `V4-INSTALL-EXEC` | **High** | Risky commands run during `preinstall`/`install`/`postinstall` (`curl\|sh`, `eval`, `base64`, `rm -rf`, `npm i`, …) |
 | `V4-TYPOSQUAT`    | **High** | Package name within edit-distance 1–2 of a popular package |
-| `V4-OBF-EVAL`     | **High** | Decode-and-execute patterns (`eval(atob(...))`, `base64.b64decode`, `new Function(...)`) |
+| `V4-OBF-EVAL`     | **High** | Decode-**then**-execute only: `eval(atob(...))`, `eval(base64...)`, `new Function(atob...)` / `new Function(base64...)` |
+| `V4-OBF-DECODE`   | Low | Benign decode primitives used alone (`atob(`, `buffer.from(`, `base64.b64decode`, `new Function(`). Informational — does **not** gate CI |
 | `V4-NET-EGRESS`   | Medium | Network calls during install (exfiltration / second-stage pull) |
-| `V4-OBF-ENTROPY`  | Medium | High-Shannon-entropy blocks (packed/encoded payloads) |
-| `V4-OBF-B64`      | Medium | Long base64-style runs |
+| `V4-OBF-ENTROPY`  | Medium | High-Shannon-entropy blocks (packed/encoded payloads), first-party code only |
+| `V4-OBF-B64`      | Medium | Long base64-style runs, first-party code only |
 | `V4-NO-PROVENANCE`| Medium | No SLSA / sigstore / in-toto attestation present |
 | `V4-THIN-META`    | Low | Manifest missing `repository` / `license` |
 
