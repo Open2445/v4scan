@@ -332,7 +332,7 @@ No push/publish performed (PAT revocation unconfirmed — see BLOCKER above). Al
 | Public launch surface (README/DEMO) | **PROVEN (prepared)** | written; not yet pushed to a public remote |
 | installs/week | **UNINSTRUMENTED** | no crates.io publish, no GitHub Release binaries |
 | stars / clones / stranger issues+PRs | **NOT MEASURED** | repo read-only to public at `a93aed1`; unverified whether the founder counts |
-| outreach touches / replies / meetings | **0 (NOT a signal)** | materials prepared; no send capability/authorization this session |
+| outreach touches / replies / meetings | **0 (NOT a signal)** | materials + 25-row Tier-A send queue prepared (`first-25-touch-queue.md`); no send capability/authorization this session |
 | Condition #3 (novel malicious artifact) | **INCONCLUSIVE** | no obtainable genuine artifact unflagged by Socket/Snyk/GitHub |
 | PAT revocation | **UNCONFIRMED** | blocks all authenticated GitHub ops |
 
