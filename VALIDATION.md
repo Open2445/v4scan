@@ -256,12 +256,43 @@ known-malicious sample existed to test "missed-known-malicious" against (see lim
     for **regression-only** fixtures (these are *known* malicious and do not count toward
     Condition #3).
 
+### Condition #3 — 2026-09-09 research pass (web-sourced candidates)
+
+Web search of current 2026 reporting for genuinely-malicious MCP / AI-agent-skill packages the
+major scanners had **not** flagged. Every named, obtainable artifact found is **already in OSV /
+Socket / Snyk / GitHub** databases, so it fails clause (c). The un-flagged ones have no obtainable
+source. No live malware was downloaded (policy + design: v4scan is strictly install-time).
+
+| Candidate (source) | Already flagged? | Fails Condition #3 because |
+|---|---|---|
+| OSV `MAL-2026-5477` (`mcp-server-figma` typosquat), `MAL-2026-5481` (npx-confusion canary) | **Yes — in OSV** (GitHub Advisory + Socket/Snyk ingest OSV) | already flagged (c) |
+| dugganusa 24 malicious PyPI MCP pkgs (mcp-runcommand-server, openai-mcp, langchain-core-mcp, latinum-wallet-mcp…) | **Yes — sourced FROM OSV's known-malicious PyPI catalog** | already flagged (c) |
+| SANDWORM_MODE (19 typosquatted AI-coding pkgs) | **Yes — Socket discovered it** | already flagged (c) |
+| Morphisec `drp-compliance-sdk v1.2.3` (SOX/DRP-2026 tool, base64 URL + char-code array, fires on `tools/list`) | unverified | vendor write-up only; **runtime** handshake attack → outside v4scan install-time scope; no obtainable source |
+| Deadbugz (Aug 2026, 23 GitHub PRs injecting malicious MCP server in 74 min) | unverified | source not obtainable; flagging unverified |
+| ATR-2026-02405 "AgentBaiting" | unverified | source not obtainable; flagging unverified |
+
+**Honest conclusion (re-confirmed):** the *problem* is real and current — 2026 reporting documents
+axios/Axios npm hijack (North Korea, Mar 31), the Miasma worm (32 @redhat-cloud-services releases,
+Jun 1), Shai-Hulud lineage, ~24 malicious PyPI MCP packages, 1,184 malicious OpenClaw skills
+(Feb–May), Deadbugz (Aug), etc. This is strong **qualitative** support for demand (Conditions #1/#2)
+but is **not** a Condition #3 true positive, because every obtainable malicious artifact is already
+flagged by a major scanner. Condition #3 novel-malicious axis remains **INCONCLUSIVE**, not failed.
+
+**Design boundary to remember:** v4scan is strictly **install-time**. Several 2026 attacks
+(runtime `tools/list` exfiltration, context hijacking, rug pulls, tool-poisoning) are **out of its
+scope by design** — they would not be a v4scan Condition #3 catch even if novel and unflagged.
+
 ### Novel-detection log (Condition #3)
 
 | Date | Package | v4scan signal(s) | Verdict by Socket/Snyk/GitHub | Novel? | Notes |
 |------|---------|------------------|-------------------------------|--------|-------|
 | 2026-09-08 | (170-pkg mainstream corpus) | 15× `V4-OBF-EVAL` (HIGH, old binary) | — | No | All false positives; tuning fixed → 0 HIGH |
 | 2026-09-08 | `claud-code@0.0.1-security` | `V4-TYPOSQUAT` (HIGH) | Flagged — SANDWORM_MODE, Socket Feb 2026 | **No** | Real typosquat, but already known; placeholder on npm |
+| 2026-09-09 | OSV MAL-2026-5477 (mcp-server-figma) | — (not run; no source) | Flagged — in OSV catalog | **No** | Already in OSV → GitHub/Socket/Snyk ingest |
+| 2026-09-09 | dugganusa 24 PyPI MCP pkgs | — (not run; no source) | Flagged — from OSV known-malicious catalog | **No** | Source = OSV, so already flagged |
+| 2026-09-09 | SANDWORM_MODE (19 typosquats) | — (not run; no source) | Flagged — Socket discovered | **No** | Already flagged by Socket |
+| 2026-09-09 | Morphisec drp-compliance-sdk | — (not run; no source) | Unverified | **No** | Runtime attack; outside v4scan install-time scope; no obtainable source |
 
 ---
 
