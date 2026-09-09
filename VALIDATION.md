@@ -390,7 +390,7 @@ Closes the multi-platform binary gap that blocked a clean Release:
 | installs/week | **MEASURABLE** | GitHub Release v0.1.0 binaries live → downloads now instrumented; readings left BLANK per discipline (no demand activity driven yet); `cargo install` path still UNINSTRUMENTED (crates.io BLOCKED) |
 | self-scan CI (supply-chain firewall) | **RESOLVED (PROVEN)** | triage: NOT a real dependency risk — every High/Critical was the repo's own intentional hostile fixtures (`examples/`, `test-fixtures/`) or a doc/source false-positive from *mentioning* `eval(atob`. `--exclude` added **without weakening detection** (regression `cargo test` guards it); commit `a8f1603` pushed; gate proven exit 0, 10/10 tests pass |
 | stars / clones / stranger issues+PRs | **MEASURABLE (blank)** | public GitHub API reachable; live readings are 0/empty — left BLANK per discipline (no launch/outreach has driven traffic; no inbound yet) |
-| outreach touches / replies / meetings | **0 (NOT a signal)** | 25-row Tier-A queue staged; no authorized send path this session — nothing sent, nothing recorded as demand |
+| outreach touches / replies / meetings | **0 (PREP COMPLETE, not sent)** | Tier-A queue now **AUTHORIZED** + 25 fire-ready drafts in `opc-doc/outputs/08-launch/tier-A-ready-to-fire.md`; 0 actually sent — live log `day-30-tracking-sheet.csv` empty; transmission needs a send channel (founder fires manually or authorizes a connector); I cannot transmit from this environment |
 | Condition #3 (novel malicious artifact) | **INCONCLUSIVE** | no obtainable genuine artifact unflagged by Socket/Snyk/GitHub |
 | PAT revocation | **RESOLVED** | push completed 2026-09-09 via secure credential mechanism |
 
@@ -484,6 +484,35 @@ cells stay blank until a meaningful instrumented reading exists.
 self-scan gate** (a quality/engineering signal, not demand). All demand signals (stars, downloads,
 stranger issues/PRs, novel detections, installs) are blank by design until demand activity
 (launch / outreach / inbound) is initiated. Condition #3 novel-malicious axis remains **INCONCLUSIVE**.
+
+### C. Outreach execution (Tier-A) — prepared, NOT yet sent (2026-09-09)
+
+**Authorization:** the founder authorized the outreach process this session. All pre-conditions for
+firing are now MET: PAT revoked + rotated (secure mechanism), Release v0.1.0 shipped with 6 binaries
+(installs now instrumented), all commits pushed. Only the **actual transmission channel** remains.
+
+**What is ready (fire-ready):**
+- `opc-doc/outputs/07-conversion/first-25-touch-queue.md` — the 25 ordered Tier-A targets (VERIFIED
+  humans first), with channel + acquisition-collapse notes.
+- `opc-doc/outputs/08-launch/tier-A-ready-to-fire.md` — **25 personalized, copy-paste-ready drafts**
+  (§A email for #12 n8n + #19 Browserbase; §D manual message for the other 23) + the §E Show HN post
+  + the §B/§C follow-up sequence. Each §D is <400 chars per the ToS-safe manual-only rule.
+- Templates: `outreach-package.md` (§A–§E); tracking schema: `day-30-tracking-sheet.md` +
+  `day-30-tracking-sheet.csv` (live per-touch log).
+
+**Remaining step (blocks real demand evidence):** transmit the messages. This environment has **no
+email/DM/social API credential or connector**, so I cannot deliver a message to a human. Per the queue's
+own spec ("I will not auto-send. You fire these manually … or authorize a sending tool") and the
+LinkedIn/Discord ToS ban on automation, the designed path is **manual firing by the founder** (GitHub
+DM/Discussion, email, forum/contact-form, or the Show HN post), after which the date + any reply is
+reported back and logged. Real verification (touches/replies/meetings) cannot exist until this happens.
+
+**Live counts (honest):** touches sent = **0**, replies = **0**, meetings = **0** — these are **NOT a
+signal** (no send has occurred). The CSV stays empty until the first message is delivered.
+
+**Discipline preserved:** no touch is recorded as sent until actually delivered; no 0 is logged as
+demand; Condition #3 novel-malicious axis remains **INCONCLUSIVE**; crates.io publish still BLOCKED
+(no token via secure mechanism) — do not publish until it is.
 
 ---
 
