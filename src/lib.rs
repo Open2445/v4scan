@@ -318,7 +318,34 @@ fn is_text(_path: &Path, data: &[u8]) -> bool {
     std::str::from_utf8(data).is_ok()
 }
 
-fn collect_files(root: &Path, out: &mut Vec<PathBuf>, limit: usize) {
+/// Returns true if `path` should be skipped because it matches an exclusion.
+/// An exclude entry matches when:
+/// - it has no path separator and equals one of the path's segment names
+///   (e.g. `examples`, `test-fixtures`, `target`, `src`, `tests`), or
+/// - it begins with `*` and the path ends with that suffix (e.g. `*.md`).
+/// Exclusions are a scoping control (mirror Socket/Snyk ignore paths); they do
+/// NOT change any detection rule — only which files are visited.
+fn is_excluded(path: &Path, excludes: &[String]) -> bool {
+    let segments: Vec<String> = path
+        .components()
+        .filter_map(|c| c.as_os_str().to_str().map(|s| s.to_string()))
+        .collect();
+    for ex in excludes {
+        if let Some(suffix) = ex.strip_prefix('*') {
+            if suffix.is_empty() {
+                continue;
+            }
+            if path.to_string_lossy().ends_with(suffix) {
+                return true;
+            }
+        } else if segments.iter().any(|s| s == ex) {
+            return true;
+        }
+    }
+    false
+}
+
+fn collect_files(root: &Path, out: &mut Vec<PathBuf>, limit: usize, excludes: &[String]) {
     if out.len() >= limit {
         return;
     }
@@ -338,17 +365,33 @@ fn collect_files(root: &Path, out: &mut Vec<PathBuf>, limit: usize) {
                 continue;
             }
         }
+        if is_excluded(&p, excludes) {
+            continue;
+        }
         if p.is_dir() {
-            collect_files(&p, out, limit);
+            collect_files(&p, out, limit, excludes);
         } else {
             out.push(p);
         }
     }
 }
 
+/// Scan a package/skill directory for supply-chain risk signals.
+///
+/// `excludes` is an optional list of path segments or `*.ext` suffixes to skip
+/// (e.g. a project's own intentional hostile test corpus). Excluding a path
+/// never changes a detection rule — it only narrows what is visited, so a
+/// scanner pointed at real packages detects exactly as before.
 pub fn scan_path(root: &Path) -> ScanReport {
+    scan_path_with_excludes(root, &[])
+}
+
+/// Like [`scan_path`], but skips any path matched by `excludes` (see
+/// [`is_excluded`]). Intended for self-scan gate CI that must not flag the
+/// project's own intentional test fixtures.
+pub fn scan_path_with_excludes(root: &Path, excludes: &[String]) -> ScanReport {
     let mut files = Vec::new();
-    collect_files(root, &mut files, 3000);
+    collect_files(root, &mut files, 3000, excludes);
 
     let mut findings: Vec<Finding> = Vec::new();
     let mut script_values: Vec<(String, String)> = Vec::new();

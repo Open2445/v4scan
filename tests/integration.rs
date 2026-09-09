@@ -12,7 +12,7 @@
 use std::collections::HashSet;
 use std::path::PathBuf;
 
-use v4_scan::{scan_path, Severity};
+use v4_scan::{scan_path, scan_path_with_excludes, Severity};
 
 fn example_dir(name: &str) -> PathBuf {
     let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -188,4 +188,53 @@ fn tempdir_with_package(name: &str, version: &str) -> PathBuf {
     );
     std::fs::write(base.join("package.json"), manifest).unwrap();
     base
+}
+
+/// `--exclude` must SCOPE the scan (skip the project's own intentional hostile
+/// test corpus) WITHOUT weakening any detection rule. Proof by contradiction:
+/// the same malicious fixture that blocks when scanned directly must NOT block
+/// when its directory is excluded — yet it still blocks when not excluded, so
+/// detection is provably intact. This mirrors the CI gate's use of
+/// `--exclude examples,test-fixtures,*.md`.
+#[test]
+fn exclude_scopes_scan_without_weakening_detection() {
+    use std::io::Write;
+    let base =
+        std::env::temp_dir().join(format!("v4scan-excl-{}-{}", std::process::id(), "obf"));
+    let _ = std::fs::remove_dir_all(&base);
+    std::fs::create_dir_all(base.join("fixtures")).unwrap();
+    // benign manifest so the package itself looks legitimate
+    std::fs::write(
+        base.join("package.json"),
+        "{\"name\":\"clean-pkg\",\"version\":\"1.0.0\",\"license\":\"MIT\"}",
+    )
+    .unwrap();
+    // malicious fixture: genuine decode-and-execute
+    let mut f = std::fs::File::create(base.join("fixtures").join("index.js")).unwrap();
+    writeln!(f, "const payload = ''; eval(atob(payload));").unwrap();
+    drop(f);
+
+    // Without exclude: the malicious fixture is visited -> V4-OBF-EVAL (HIGH), blocks.
+    let r_included = scan_path(&base);
+    assert!(
+        has_blocking(&r_included),
+        "detection must still fire when the fixture is NOT excluded"
+    );
+    assert!(
+        signal_ids(&r_included).contains("V4-OBF-EVAL"),
+        "V4-OBF-EVAL expected on the included malicious fixture"
+    );
+
+    // With exclude: the fixture dir is skipped -> no blocking finding from it.
+    let r_excluded = scan_path_with_excludes(&base, &["fixtures".to_string()]);
+    assert!(
+        !has_blocking(&r_excluded),
+        "--exclude fixtures must scope the scan so the malicious sample is skipped"
+    );
+    assert!(
+        !signal_ids(&r_excluded).contains("V4-OBF-EVAL"),
+        "V4-OBF-EVAL must be absent when its fixture dir is excluded"
+    );
+
+    let _ = std::fs::remove_dir_all(&base);
 }

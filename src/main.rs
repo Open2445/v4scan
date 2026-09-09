@@ -7,12 +7,26 @@ fn main() {
     let mut target: Option<String> = None;
     let mut as_sarif = false;
     let mut explain = false;
+    let mut excludes: Vec<String> = Vec::new();
 
     let mut i = 1;
     while i < args.len() {
         match args[i].as_str() {
             "--sarif" => as_sarif = true,
             "--explain" => explain = true,
+            "--exclude" => {
+                if i + 1 >= args.len() {
+                    eprintln!("error: --exclude requires a comma-separated list");
+                    process::exit(2);
+                }
+                i += 1;
+                for part in args[i].split(',') {
+                    let p = part.trim();
+                    if !p.is_empty() {
+                        excludes.push(p.to_string());
+                    }
+                }
+            }
             "--help" | "-h" => {
                 print_help();
                 return;
@@ -44,7 +58,11 @@ fn main() {
         process::exit(2);
     }
 
-    let report = scan_path(&path);
+    let report = if excludes.is_empty() {
+        v4_scan::scan_path(&path)
+    } else {
+        v4_scan::scan_path_with_excludes(&path, &excludes)
+    };
     if as_sarif {
         println!("{}", report.to_sarif());
     } else {
@@ -78,11 +96,15 @@ fn print_help() {
     println!("FLAGS:");
     println!("  --sarif     emit SARIF 2.1.0 (forwardable to GRC / security tooling)");
     println!("  --explain   print human-readable explanations after the JSON");
+    println!("  --exclude   comma-separated dir names / '*.ext' suffixes to skip");
+    println!("              (e.g. --exclude examples,test-fixtures,*.md). Scoping");
+    println!("              only — never changes a detection rule.");
     println!("  -h, --help  this message");
     println!();
     println!("EXAMPLES:");
     println!("  v4scan ./my-mcp-server");
     println!("  v4scan ./agent-skill --sarif");
+    println!("  v4scan . --exclude examples,test-fixtures,*.md");
     println!();
     println!("EXIT CODES: 0 = no blocking finding, 1 = critical/high finding, 2 = usage error");
 }

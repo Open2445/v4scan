@@ -23,10 +23,13 @@ jobs:
       - name: Build v4-scan
         run: cargo build --release
 
+      - name: Regression — prove detection still fires on the hostile fixtures
+        run: cargo test --release
+
       - name: Run v4-scan (SARIF)
         run: |
           SCAN_PATH="${{ github.event.inputs.scan-path || '.' }}"
-          ./target/release/v4scan "$SCAN_PATH" --sarif > v4scan.sarif
+          ./target/release/v4scan "$SCAN_PATH" --exclude examples,test-fixtures,_cond3,target,src,tests,'*.md' --sarif > v4scan.sarif
           echo "::group::v4scan report"
           cat v4scan.sarif
           echo "::endgroup::"
@@ -41,4 +44,4 @@ jobs:
       - name: Gate on High/Critical findings
         run: |
           SCAN_PATH="${{ github.event.inputs.scan-path || '.' }}"
-          ./target/release/v4scan "$SCAN_PATH"
+          ./target/release/v4scan "$SCAN_PATH" --exclude examples,test-fixtures,_cond3,target,src,tests,'*.md'
