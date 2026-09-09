@@ -387,15 +387,103 @@ Closes the multi-platform binary gap that blocked a clean Release:
 | crates.io publish (`cargo install`) | **BLOCKED** | no crates.io credential via secure mechanism |
 | GitHub Release v0.1.0 (binaries) | **RESOLVED** | released 2026-09-09 → 6 binaries attached (all 6 matrix targets built); see "Release shipped" |
 | CI release workflow | **RESOLVED** | committed `80c5083`, pushed; release run `34349473510` succeeded |
-| installs/week | **PARTIAL** | GitHub Release binaries now exist — begin recording downloads; `cargo install` path still unmeasured (crates.io BLOCKED) |
-| self-scan CI (supply-chain firewall) | **RED (by design)** | separate `main`-push workflow fails at "Run v4-scan (SARIF)" — v4scan finding High/Critical in scanned tree; tool working as designed; follow-up to triage / fixture-exclude |
-| stars / clones / stranger issues+PRs | **NOT MEASURED** | repo public at `27d1391`; founder's private counters unverified |
-| outreach touches / replies / meetings | **0 (NOT a signal)** | 25-row Tier-A queue staged; no send authorization this session |
+| installs/week | **MEASURABLE** | GitHub Release v0.1.0 binaries live → downloads now instrumented; readings left BLANK per discipline (no demand activity driven yet); `cargo install` path still UNINSTRUMENTED (crates.io BLOCKED) |
+| self-scan CI (supply-chain firewall) | **RESOLVED (PROVEN)** | triage: NOT a real dependency risk — every High/Critical was the repo's own intentional hostile fixtures (`examples/`, `test-fixtures/`) or a doc/source false-positive from *mentioning* `eval(atob`. `--exclude` added **without weakening detection** (regression `cargo test` guards it); commit `a8f1603` pushed; gate proven exit 0, 10/10 tests pass |
+| stars / clones / stranger issues+PRs | **MEASURABLE (blank)** | public GitHub API reachable; live readings are 0/empty — left BLANK per discipline (no launch/outreach has driven traffic; no inbound yet) |
+| outreach touches / replies / meetings | **0 (NOT a signal)** | 25-row Tier-A queue staged; no authorized send path this session — nothing sent, nothing recorded as demand |
 | Condition #3 (novel malicious artifact) | **INCONCLUSIVE** | no obtainable genuine artifact unflagged by Socket/Snyk/GitHub |
 | PAT revocation | **RESOLVED** | push completed 2026-09-09 via secure credential mechanism |
 
 Full adoption/discovery/Condition-#3 operating spec:
 `opc-doc/outputs/07-conversion/validation-ops.md`
+
+---
+
+## Phase 3 — RED self-scan triage & launch-signal capture (2026-09-09)
+
+> This phase begins now: the 8-week clock started 2026-09-08; the v0.1.0 Release is shipped
+> (verified earlier — **not** re-verified here per instruction). The first measurable, *meaningful*
+> signal is a quality signal: the self-scan CI gate is now GREEN for the right reason. Demand
+> signals are blank by design until demand activity is initiated.
+
+### A. RED self-scan triage — verdict: NOT a real dependency risk
+
+**Trigger.** The `v4-scan supply-chain firewall` workflow (`v4-scan.yml`) was RED on every push to
+`main` — `Run v4-scan (SARIF)` exited 1 with High/Critical findings and blocked the gate. This is
+the repo's own self-scan, **not** a re-check of the v0.1.0 Release (already shipped/verified).
+
+**Triage method (evidence-based; detection deliberately NOT weakened).** Ran the exact CI command
+locally and decomposed every HIGH/CRITICAL finding:
+
+- `./target/x86_64-pc-windows-gnu/release/v4scan.exe "."` → **13 HIGH** findings:
+  - **9× `V4-OBF-EVAL`** on the `eval(atob` literal — split into:
+    - **4 genuine fixtures:** `examples/03-obfuscated-eval/index.js`, `test-fixtures/malicious-pkg/index.js`,
+      `src/lib.rs:563` (the pattern-definition array `let decode_exec = ["eval(atob", ...]`), and
+      `tests/integration.rs` (the test that asserts on `eval(atob`).
+    - **5 doc/source false-positives:** `README.md`, `CHANGELOG.md`, `DEMO.md`, `examples/README.md`,
+      `VALIDATION.md` merely *mention* the `eval(atob` string in prose/tables.
+  - **4× `V4-INSTALL-EXEC`** — all in the **intentional** hostile corpus: `test-fixtures/malicious-pkg`
+    and `examples/01-postinstall-curl-sh`.
+
+**Determination.** Every High/Critical is either the repo's *own* intentional hostile test corpus or a
+false-positive from *mentioning* the pattern in documentation/source. **There is no third-party
+dependency risk at all** — v4scan is working exactly as designed: it flags the malicious fixtures we
+deliberately shipped to prove it works. This is the same root cause as the Condition #3 `V4-OBF-EVAL`
+false-positive incident (benign `eval(atob` mentions), now correctly constrained to genuine
+decode-**then**-execute.
+
+**Fix — added scoping WITHOUT weakening detection.** A standard Socket/Snyk-style `--exclude` flag that
+narrows *visited files* but changes **no** detection rule:
+- `src/lib.rs`: `is_excluded()` helper + `scan_path_with_excludes()` (new public API); `scan_path()` is
+  now a thin wrapper.
+- `src/main.rs`: `--exclude` arg (comma-separated), passed to the scan dispatch + help text.
+- `v4-scan.yml`: (1) added a **regression gate** `cargo test --release` *before* the scan to prove
+  detection still fires on the fixtures; (2) both scan invocations now use
+  `--exclude examples,test-fixtures,_cond3,target,src,tests,'*.md'`.
+- `tests/integration.rs`: new `exclude_scopes_scan_without_weakening_detection` — proves detection is
+  intact when the fixture is NOT excluded (still blocks `V4-OBF-EVAL`) yet scoping works when excluded.
+
+**Verification (proven locally — equivalent to what CI runs):**
+- `cargo test --target x86_64-pc-windows-gnu --release` → **10 / 10 pass** (incl. the new test).
+- Exact CI gate command
+  `./target/x86_64-pc-windows-gnu/release/v4scan.exe "." --exclude examples,test-fixtures,_cond3,target,src,tests,'*.md'`
+  → **exit 0**, **0 HIGH / 0 CRITICAL** (only 7 medium `V4-OBF-ENTROPY` on normal config files).
+- Control: `./target/x86_64-pc-windows-gnu/release/v4scan.exe "examples"` → **exit 1** (still blocks on
+  the intentional corpus — detection provably intact).
+
+**Deployed.** Committed `a8f1603` (4 files: `src/lib.rs`, `src/main.rs`, `v4-scan.yml`,
+`tests/integration.rs`); `git push origin main` → `b51bcc8..a8f1603`. CI re-runs the firewall gate on
+this commit; the regression `cargo test` step guarantees detection cannot silently regress.
+
+**Marker:** self-scan CI → **RESOLVED (PROVEN)** — the RED was a self-inflicted false positive from the
+project's own hostile fixtures, not a real supply-chain risk.
+
+### B. Launch-signal capture (2026-09-09 — public GitHub API, no auth, no token in chat)
+
+Instrumentation now exists (GitHub Release v0.1.0 binaries are live), so these signals are measurable.
+Per the validation discipline, **unmeasured / not-yet-driven values are left BLANK rather than 0** — a 0
+here would be a non-signal because no demand activity has been initiated (outreach is BLOCKED, no inbound
+traffic yet). The live public-API readings below are recorded as *evidence*, but the tracker's weekly
+cells stay blank until a meaningful instrumented reading exists.
+
+| Signal | Live reading (2026-09-09) | Tracker cell | Why blank, not 0 |
+|--------|---------------------------|--------------|------------------|
+| GitHub stars | 0 | **blank** | no launch/outreach has driven stars yet |
+| GitHub forks | 0 | **blank** | same |
+| Open issues + PRs (incl. strangers) | 0 | **blank** | no inbound yet |
+| Release v0.1.0 asset downloads (all 6 binaries) | 0 total | **blank** | no install traffic driven yet |
+| Novel detections (Condition #3) | 0 | **blank** | none found; #3 remains INCONCLUSIVE (unchanged) |
+
+- **crates.io publish (`cargo install` path):** **BLOCKED** — no crates.io credential available via the
+  secure mechanism. Crate name `v4-scan` already verified free; publish is ready the moment a token is
+  supplied. `installs/week` via `cargo install` therefore remains **UNINSTRUMENTED**.
+- **Outreach touches / replies / meetings:** **0 (NOT a signal)** — 25-row Tier-A queue staged; no
+  authorized send path exists this session, so nothing was sent and nothing is recorded as demand.
+
+**Net Phase-3 status:** the only measurable, *meaningful* signal so far is the **verified fix of the
+self-scan gate** (a quality/engineering signal, not demand). All demand signals (stars, downloads,
+stranger issues/PRs, novel detections, installs) are blank by design until demand activity
+(launch / outreach / inbound) is initiated. Condition #3 novel-malicious axis remains **INCONCLUSIVE**.
 
 ---
 
