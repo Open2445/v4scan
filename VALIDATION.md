@@ -324,19 +324,25 @@ Baseline state before outreach begins:
   binaries exist, so no download counter exists. Do **not** record 0 as a demand signal.
   Fix: `cargo publish` + cut a Release with binaries, then start recording.
 
-### 🚧 Blocker: exposed GitHub PAT (unresolved)
+### ✅ PAT blocker RESOLVED (2026-09-09)
 
-A GitHub personal access token was previously exposed in this project's history/session output.
+A GitHub PAT was previously exposed in this project's history/session output. It was revoked/rotated
+by the founder and re-issued through the environment's **secure credential mechanism** (never printed,
+echoed, logged, committed, or exposed in this session).
 
-- **Revocation status: UNVERIFIED.** It cannot be confirmed without performing an authenticated
-  GitHub call — which is exactly what must not happen while the token may still be live.
-- **Therefore: zero authenticated git operations have been performed.** No push, no authenticated
-  fetch. The `ls-remote` check above was run with `GIT_TERMINAL_PROMPT=0` and used no credential.
-- `git remote -v` confirmed to contain **no embedded token** (plain `https://github.com/...`).
-- **Required founder action:** revoke + rotate the PAT at
-  <https://github.com/settings/tokens>, then confirm. Only after that: `git push origin main`,
-  `cargo publish`, and cutting a GitHub Release.
-- No token has been written to any remote, file, log, commit, or this document.
+- **Push completed 2026-09-09:** `git push origin main` → pushed SHA
+  `27d13914edd91b8e566d90d8598ab9801aeb11ca`; remote `main -> main`; working tree clean.
+- Zero token exposure: the PAT was used only by the authenticated push and was never written to any
+  remote, file, log, commit, or this document.
+
+### 🚧 Remaining launch blockers (2026-09-09, updated 2026-09-09 PM)
+
+| Blocker | Status | What unblocks it (secure, no token in chat) |
+|---|---|---|
+| crates.io publish (`cargo publish`) | **BLOCKED** | No crates.io credential present in the environment (`~/.cargo/credentials.toml` absent; no `CARGO_REGISTRIES_CRATES_IO_TOKEN` env). Founder must make a crates.io API token available via the **same secure credential mechanism** the PAT used; then `CARGO_BUILD_TARGET=x86_64-pc-windows-gnu cargo publish`. Crate name `v4-scan` re-verified **free** on crates.io this session (HTTP 404). |
+| GitHub Release v0.1.0 (binaries) | **UNBLOCKED via CI** | Added `.github/workflows/release.yml` — builds Windows gnu+msvc, Linux gnu+musl, macOS arm64+x86_64 and creates the Release using the built-in `GITHUB_TOKEN` (no external secret, no `gh` install). Pending founder approval of a commit + push of the workflow, then `git tag v0.1.0 && git push origin v0.1.0` triggers it. |
+| CI workflow file | **STAGED (uncommitted)** | Present locally at `.github/workflows/release.yml`. Not pushed yet (controlled-push discipline — not pushing new files without explicit go-ahead). |
+| installs/week instrumentation | **UNINSTRUMENTED** | Resolves once publish and/or Release exist; until then do **not** record 0 as demand. |
 
 ## Phase 1 verification — 2026-09-08 (local state only, zero authenticated network ops)
 
@@ -355,17 +361,37 @@ No push/publish performed (PAT revocation unconfirmed — see BLOCKER above). Al
 
 **Local quality gates: GREEN.** Public launch + install instrumentation remain **BLOCKED** on the PAT.
 
-## Status snapshot (2026-09-08)
+## Launch prep addendum — 2026-09-09 PM (CI release workflow + crates.io check)
+
+Closes the multi-platform binary gap that blocked a clean Release:
+
+- **Added `.github/workflows/release.yml`** (staged, uncommitted). Matrix builds 6 targets:
+  Windows gnu+msvc, Linux gnu+musl, macOS arm64+x86_64. Creates the GitHub Release using the
+  built-in `GITHUB_TOKEN` (no external secret, no `gh` install). windows-gnu uses choco MinGW +
+  static-CRT so the binary carries no MinGW runtime DLLs (matching the locally staged gnu binary).
+  The workflow is **untested in CI** (no CI run possible here); the windows-gnu job is the fragile
+  part — if it ever fails, windows-msvc still covers Windows and the locally-built gnu .exe can be
+  attached manually.
+- **crates.io name `v4-scan` re-verified free** (HTTP 404) this session — publish is ready the moment
+  a crates.io token is supplied via the secure mechanism.
+- **Re-checked credentials:** still no crates.io token and `gh` not installed — so `cargo publish` and
+  a manual Release remain credential-blocked; the CI workflow removes the *manual Release* blocker.
+
+## Status snapshot (2026-09-08 → updated 2026-09-09)
 
 | Dimension | Marker | Why |
 |---|---|---|
-| Product quality (tests, fixtures, SARIF, packaging) | **PROVEN** | re-run this session, real output above |
-| Public launch surface (README/DEMO) | **PROVEN (prepared)** | written; not yet pushed to a public remote |
-| installs/week | **UNINSTRUMENTED** | no crates.io publish, no GitHub Release binaries |
-| stars / clones / stranger issues+PRs | **NOT MEASURED** | repo read-only to public at `a93aed1`; unverified whether the founder counts |
-| outreach touches / replies / meetings | **0 (NOT a signal)** | materials + 25-row Tier-A send queue prepared (`first-25-touch-queue.md`); no send capability/authorization this session |
+| Product quality (tests, fixtures, SARIF, packaging) | **PROVEN** | 9/9 tests; six-fixture sweep; SARIF 4 rules; `cargo package` 33 files |
+| Public launch surface (code on GitHub) | **PROVEN** | pushed 2026-09-09 → `27d1391`; remote `main` public |
+| Release binary (Windows gnu) | **PROVEN** | built, functional, portable (system-DLL only); SHA256 recorded |
+| crates.io publish (`cargo install`) | **BLOCKED** | no crates.io credential via secure mechanism |
+| GitHub Release v0.1.0 (binaries) | **UNBLOCKED via CI** | `.github/workflows/release.yml` builds 6 targets + creates Release via `GITHUB_TOKEN`; pending commit+push of workflow + tag `v0.1.0` |
+| CI release workflow | **STAGED (uncommitted)** | `.github/workflows/release.yml` present locally; not pushed (controlled-push discipline) |
+| installs/week | **UNINSTRUMENTED** | no crates.io publish and no GitHub Release yet; do **not** record 0 |
+| stars / clones / stranger issues+PRs | **NOT MEASURED** | repo public at `27d1391`; founder's private counters unverified |
+| outreach touches / replies / meetings | **0 (NOT a signal)** | 25-row Tier-A queue staged; no send authorization this session |
 | Condition #3 (novel malicious artifact) | **INCONCLUSIVE** | no obtainable genuine artifact unflagged by Socket/Snyk/GitHub |
-| PAT revocation | **UNCONFIRMED** | blocks all authenticated GitHub ops |
+| PAT revocation | **RESOLVED** | push completed 2026-09-09 via secure credential mechanism |
 
 Full adoption/discovery/Condition-#3 operating spec:
 `opc-doc/outputs/07-conversion/validation-ops.md`
