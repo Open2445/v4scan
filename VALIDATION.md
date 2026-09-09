@@ -385,9 +385,10 @@ Closes the multi-platform binary gap that blocked a clean Release:
 | Public launch surface (code on GitHub) | **PROVEN** | pushed 2026-09-09 → `27d1391`; remote `main` public |
 | Release binary (Windows gnu) | **PROVEN** | built, functional, portable (system-DLL only); SHA256 recorded |
 | crates.io publish (`cargo install`) | **BLOCKED** | no crates.io credential via secure mechanism |
-| GitHub Release v0.1.0 (binaries) | **UNBLOCKED via CI** | `.github/workflows/release.yml` builds 6 targets + creates Release via `GITHUB_TOKEN`; pending commit+push of workflow + tag `v0.1.0` |
-| CI release workflow | **STAGED (uncommitted)** | `.github/workflows/release.yml` present locally; not pushed (controlled-push discipline) |
-| installs/week | **UNINSTRUMENTED** | no crates.io publish and no GitHub Release yet; do **not** record 0 |
+| GitHub Release v0.1.0 (binaries) | **RESOLVED** | released 2026-09-09 → 6 binaries attached (all 6 matrix targets built); see "Release shipped" |
+| CI release workflow | **RESOLVED** | committed `80c5083`, pushed; release run `34349473510` succeeded |
+| installs/week | **PARTIAL** | GitHub Release binaries now exist — begin recording downloads; `cargo install` path still unmeasured (crates.io BLOCKED) |
+| self-scan CI (supply-chain firewall) | **RED (by design)** | separate `main`-push workflow fails at "Run v4-scan (SARIF)" — v4scan finding High/Critical in scanned tree; tool working as designed; follow-up to triage / fixture-exclude |
 | stars / clones / stranger issues+PRs | **NOT MEASURED** | repo public at `27d1391`; founder's private counters unverified |
 | outreach touches / replies / meetings | **0 (NOT a signal)** | 25-row Tier-A queue staged; no send authorization this session |
 | Condition #3 (novel malicious artifact) | **INCONCLUSIVE** | no obtainable genuine artifact unflagged by Socket/Snyk/GitHub |
